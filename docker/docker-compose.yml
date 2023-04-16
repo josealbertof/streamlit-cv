@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  rabbitmqServer:
+    container_name: rabbitmqServer
+    image: "rabbitmq:3.6-management-alpine"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  streamlit:
+    build:
+      context: ..
+      dockerfile: "docker/streamlit.dockerfile"
+    depends_on:
+      - rabbitmqServer
+    ports:
+      - "8501:8501"
+  back:
+    build:
+      context: ..
+      dockerfile:  "docker/back.dockerfile"
+    depends_on:
+      - rabbitmqServer
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            capabilities:
+              - gpu
+              - utility # nvidia-smi
+              - compute # CUDA. Required to avoid "CUDA version: N/A"
