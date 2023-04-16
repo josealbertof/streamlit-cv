@@ -1,0 +1,7 @@
+.venv
+.vscode
+__pycache__
+*.ipynb
+.ipynb_checkpoints
+model/*
+!model/README.md
